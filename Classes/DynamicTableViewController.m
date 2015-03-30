@@ -40,7 +40,7 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");  
+    _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
     if (_ios7) {
         _cellsForSizeComputionCache=[NSMutableDictionary dictionary];
         _cellsHeightsCache=[NSMutableDictionary dictionary];
@@ -55,15 +55,16 @@
 
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [self _tableView:tableView DynamicConfigurableCellForRowAtIndexPath:indexPath];
+    if(self )
+        return [self _tableView:tableView configurableCellForRowAtIndexPath:indexPath];
 }
 
-- (UITableViewCell<DynamicConfigurableCell>*)_tableView:(UITableView *)tableView DynamicConfigurableCellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell<DynamicConfigurableCell>*)_tableView:(UITableView *)tableView configurableCellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell =nil;
     NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
     if(cellIdentifier){
         cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
-                                                                forIndexPath:indexPath];
+                                               forIndexPath:indexPath];
         if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if(cellDataSource){
@@ -94,14 +95,14 @@
             if(!cell){
                 cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
                 [_cellsForSizeComputionCache setObject:cell
-                                            forKey:cellIdentifier];
+                                                forKey:cellIdentifier];
             }
             
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if( [cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
             }
-    
+            
             // Make sure the constraints have been added to this cell
             [cell setNeedsUpdateConstraints];
             [cell updateConstraintsIfNeeded];
@@ -129,7 +130,8 @@
 }
 
 
-#pragma mark - Abstract methods 
+#pragma mark - Abstract methods
+
 
 // Those method should be implemented by DynamicTable
 
