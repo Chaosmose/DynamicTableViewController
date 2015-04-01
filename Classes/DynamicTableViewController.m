@@ -88,7 +88,7 @@
         // In various situation caching the size is not possible.
         // We do use one cell per cell identifier
         // And recompute the height on each demand.
-        NSString*cellIdentifier=[self cellIdentifierFo/Users/bpds/Entrepot/Git/Clients/Azurgate/scmb-objective-c/SeCoucherMoinsBete/Pods/DynamicTableViewController/Classes/DynamicTableViewController.mrIndexPath:indexPath];
+        NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
         if(cellIdentifier){
             UITableViewCell*cell=[_cellsForSizeComputation objectForKey:cellIdentifier];
             if(!cell){
