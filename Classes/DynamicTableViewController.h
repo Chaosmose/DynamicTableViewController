@@ -33,7 +33,6 @@
 
 /**
  *  Any cell should conform to DynamicConfigurableCell
- *  To support Autolayout based resizing for iOS <8
  */
 @protocol DynamicConfigurableCell <NSObject>
 @required
@@ -53,6 +52,8 @@
  *  and inheritate from DynamicTableViewController
  */
 @interface DynamicTableViewController : UITableViewController
+
+
 // ABSTRACT version of the DynamicTable protocol
 // that raises an exception if not overriden
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;

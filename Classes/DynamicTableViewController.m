@@ -31,19 +31,19 @@
 @interface DynamicTableViewController (){
     BOOL _ios7;
     // Used for IOS 7 only
-    NSMutableDictionary*_cellsForSizeComputionCache;
-    NSMutableDictionary*_cellsHeightsCache;
+    NSMutableDictionary*_cellsForSizeComputation;
 }
+
 @end
 
 @implementation DynamicTableViewController
 
+
 -(void)viewDidLoad{
     [super viewDidLoad];
-    _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
+    _ios7=YES;//SYSTEM_VERSION_LESS_THAN(@"8.0");
     if (_ios7) {
-        _cellsForSizeComputionCache=[NSMutableDictionary dictionary];
-        _cellsHeightsCache=[NSMutableDictionary dictionary];
+        _cellsForSizeComputation=[NSMutableDictionary dictionary];
     }else{
         self.tableView.estimatedRowHeight = 200.f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -55,8 +55,7 @@
 
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(self )
-        return [self _tableView:tableView configurableCellForRowAtIndexPath:indexPath];
+    return [self _tableView:tableView configurableCellForRowAtIndexPath:indexPath];
 }
 
 - (UITableViewCell<DynamicConfigurableCell>*)_tableView:(UITableView *)tableView configurableCellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -79,50 +78,42 @@
 
 #pragma mark - Autoresizing height computation
 
+// Remember that you can disable this behaviour by implementing this method in your class.
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (!_ios7) {
         return UITableViewAutomaticDimension;
     }else{
-        NSNumber*cachedHeight=[_cellsHeightsCache objectForKey:[self _keyForRowAtIndexPath:indexPath]];
-        if(cachedHeight){
-            return [cachedHeight floatValue];
-        }
-        
-        NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
+        // IOS 7 only
+        // In various situation caching the size is not possible.
+        // We do use one cell per cell identifier
+        // And recompute the height on each demand.
+        NSString*cellIdentifier=[self cellIdentifierFo/Users/bpds/Entrepot/Git/Clients/Azurgate/scmb-objective-c/SeCoucherMoinsBete/Pods/DynamicTableViewController/Classes/DynamicTableViewController.mrIndexPath:indexPath];
         if(cellIdentifier){
-            UITableViewCell*cell=[_cellsForSizeComputionCache objectForKey:cellIdentifier];
+            UITableViewCell*cell=[_cellsForSizeComputation objectForKey:cellIdentifier];
             if(!cell){
                 cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                [_cellsForSizeComputionCache setObject:cell
+                // Make sure the constraints have been added to this cell
+                [cell setNeedsUpdateConstraints];
+                [cell updateConstraintsIfNeeded];
+                [_cellsForSizeComputation setObject:cell
                                                 forKey:cellIdentifier];
             }
-            
+            // We
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if( [cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
             }
-            
-            // Make sure the constraints have been added to this cell
-            [cell setNeedsUpdateConstraints];
-            [cell updateConstraintsIfNeeded];
-            
-            // Compute the size
             cell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));
             [cell setNeedsLayout];
             [cell layoutIfNeeded];
             CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
             height += 1.f;
-            // Store the height
-            [_cellsHeightsCache setObject:@(height)
-                                   forKey:[self _keyForRowAtIndexPath:indexPath]];
             return height;
-            
         }
         return kDefaultCellHeight;
     }
 }
-
 
 
 - (NSString*)_keyForRowAtIndexPath:(NSIndexPath *)indexPath{
