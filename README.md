@@ -34,6 +34,7 @@ If nonzero, this is used when determining -intrinsicContentSize for multiline la
  You should implement DynamicTable and  UITableViewDelegate row height and cells methods.
  Don't forget to call super after your implementation.
  
+ ``` objective-c
  - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
  	// Return the identifiers for the dynamic cells
  	if(indexPath.section==0){
@@ -69,6 +70,6 @@ If nonzero, this is used when determining -intrinsicContentSize for multiline la
  		...
  		return [super tableView:tableView cellForRowAtIndexPath:index];
  }
- 
+ ```
  
  
