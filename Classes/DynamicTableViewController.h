@@ -25,6 +25,7 @@
 #import <UIKit/UIKit.h>
 
 
+
 /**
  *  The cell datasource informal protocol
  */
@@ -43,19 +44,17 @@
  *  The DynamicTable protocol
  */
 @protocol DynamicTable <NSObject>
+@required
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
 - (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
 @end
 
+
 /**
- *  Your dynamic table view controller must implement DynamicTable
+ *  Your dynamic table view controller should implement DynamicTable
  *  and inheritate from DynamicTableViewController
  */
-@interface DynamicTableViewController : UITableViewController
-
-
-// ABSTRACT version of the DynamicTable protocol
-// that raises an exception if not overriden
+@interface DynamicTableViewController : UITableViewController<DynamicTable>
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
 - (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
 @end

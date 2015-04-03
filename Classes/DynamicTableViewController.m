@@ -55,14 +55,9 @@
 
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [self _tableView:tableView configurableCellForRowAtIndexPath:indexPath];
-}
-
-- (UITableViewCell<DynamicConfigurableCell>*)_tableView:(UITableView *)tableView configurableCellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell =nil;
     NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
     if(cellIdentifier){
-        cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
+         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                forIndexPath:indexPath];
         if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
@@ -71,7 +66,9 @@
             }
         }
     }
-    return (UITableViewCell<DynamicConfigurableCell>*)cell;
+    [NSException raise:@"DynamicTableViewController"
+                format:@"This cell should not be nil cellIdentifier=%@ %@ if you mix dynamic & non dynamic cells please check the readme file instructions",cellIdentifier?cellIdentifier:@"",indexPath];
+    return nil;
 }
 
 
@@ -82,7 +79,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (!_ios7) {
-        return UITableViewAutomaticDimension;
+        if([self cellIdentifierForIndexPath:indexPath] && [self cellDataSourceForIndexPath:indexPath]){
+            return UITableViewAutomaticDimension;
+        }
     }else{
         // IOS 7 only
         // In various situation caching the size is not possible.
@@ -111,28 +110,22 @@
             height += 1.f;
             return height;
         }
-        return kDefaultCellHeight;
     }
+    return kDefaultCellHeight;
 }
-
 
 - (NSString*)_keyForRowAtIndexPath:(NSIndexPath *)indexPath{
     return [NSString stringWithFormat:@"%@|%@",@(indexPath.section),@(indexPath.row)];
 }
 
 
-#pragma mark - Abstract methods
-
-
-// Those method should be implemented by DynamicTable
+#pragma mark - Default implementation
 
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath{
-    [NSException raise:@"DynamicTableViewController" format:@"DynamicTableViewController should conform to DynamicTable protocol @selector(cellIdentifierForIndexPath:)"];
     return nil;
 }
 
 - (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath{
-    [NSException raise:@"DynamicTableViewController" format:@"DynamicTableViewController should conform to DynamicTable protocol @selector(cellDataSourceForIndexPath:)"];
     return nil;
 }
 
