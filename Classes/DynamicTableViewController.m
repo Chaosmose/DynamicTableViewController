@@ -57,17 +57,18 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
     if(cellIdentifier){
-         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
-                                               forIndexPath:indexPath];
+        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
+                                                                     forIndexPath:indexPath];
         if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if(cellDataSource){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
             }
+            return cell;
         }
     }
     [NSException raise:@"DynamicTableViewController"
-                format:@"This cell should not be nil cellIdentifier=%@ %@ if you mix dynamic & non dynamic cells please check the readme file instructions",cellIdentifier?cellIdentifier:@"",indexPath];
+                format:@"This cell should not be nil cellIdentifier:\"%@\" section:%@ row:%@ if you mix dynamic & non dynamic cells please check the readme file instructions",cellIdentifier?cellIdentifier:@"",@(indexPath.section),@(indexPath.row)];
     return nil;
 }
 
@@ -78,12 +79,9 @@
 // Remember that you can disable this behaviour by implementing this method in your class.
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (!_ios7) {
-        if([self cellIdentifierForIndexPath:indexPath] && [self cellDataSourceForIndexPath:indexPath]){
-            return UITableViewAutomaticDimension;
-        }
+    if (!_ios7 && [self cellIdentifierForIndexPath:indexPath] && [self cellDataSourceForIndexPath:indexPath]){
+        return UITableViewAutomaticDimension;
     }else{
-        // IOS 7 only
         // In various situation caching the size is not possible.
         // We do use one cell per cell identifier
         // And recompute the height on each demand.
@@ -96,9 +94,8 @@
                 [cell setNeedsUpdateConstraints];
                 [cell updateConstraintsIfNeeded];
                 [_cellsForSizeComputation setObject:cell
-                                                forKey:cellIdentifier];
+                                             forKey:cellIdentifier];
             }
-            // We
             NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if( [cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];

@@ -1,5 +1,5 @@
 # DynamicTableViewController
-'Table View cell configuration + automatic cells heights computation based on autolayout
+Table View cell configuration + automatic cells heights computation based on autolayout
 
 DynamicTableViewController configurates automatically TableView Cells that implements the DynamicConfigurableCell protocol.
 It means you donnot need to implement the UITableViewDataSource cellForRowAtIndexPath and cells heights are automatically computed. 
