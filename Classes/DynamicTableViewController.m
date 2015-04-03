@@ -79,13 +79,13 @@
 // Remember that you can disable this behaviour by implementing this method in your class.
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (!_ios7 && [self cellIdentifierForIndexPath:indexPath] && [self cellDataSourceForIndexPath:indexPath]){
+    NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
+    if (!_ios7 && cellIdentifier){
         return UITableViewAutomaticDimension;
     }else{
         // In various situation caching the size is not possible.
         // We do use one cell per cell identifier
         // And recompute the height on each demand.
-        NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
         if(cellIdentifier){
             UITableViewCell*cell=[_cellsForSizeComputation objectForKey:cellIdentifier];
             if(!cell){
