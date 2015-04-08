@@ -29,24 +29,24 @@
 /**
  *  The cell datasource informal protocol
  */
-@protocol DynamicCellDataSource <NSObject>
+@protocol DynamicCellDataSource
 @end
 
 /**
  *  Any cell should conform to DynamicConfigurableCell
  */
-@protocol DynamicConfigurableCell <NSObject>
+@protocol DynamicConfigurableCell
 @required
--(void)configureWith:(NSObject<DynamicCellDataSource>*)dataSource;
+-(void)configureWith:(id<DynamicCellDataSource>)dataSource;
 @end
 
 /**
  *  The DynamicTable protocol
  */
-@protocol DynamicTable <NSObject>
+@protocol DynamicTable 
 @required
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
-- (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
+- (id<DynamicCellDataSource>)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
 @end
 
 
@@ -56,5 +56,5 @@
  */
 @interface DynamicTableViewController : UITableViewController<DynamicTable>
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
-- (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
+- (id<DynamicCellDataSource>)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
 @end

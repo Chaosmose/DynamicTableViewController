@@ -51,6 +51,11 @@
 }
 
 
+- (void)didReceiveMemoryWarning{
+    [super didReceiveMemoryWarning];
+    _cellsForSizeComputation=nil;
+}
+
 #pragma mark - UITableViewDataSource dynamic cell configuration
 
 
@@ -60,7 +65,7 @@
         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                                      forIndexPath:indexPath];
         if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
-            NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
+            id<DynamicCellDataSource>cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if(cellDataSource){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
             }
@@ -96,7 +101,7 @@
                 [_cellsForSizeComputation setObject:cell
                                              forKey:cellIdentifier];
             }
-            NSObject<DynamicCellDataSource>*cellDataSource=[self cellDataSourceForIndexPath:indexPath];
+            id<DynamicCellDataSource>cellDataSource=[self cellDataSourceForIndexPath:indexPath];
             if( [cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
                 [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
             }
@@ -122,7 +127,7 @@
     return nil;
 }
 
-- (NSObject<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath{
+- (id<DynamicCellDataSource>*)cellDataSourceForIndexPath:(NSIndexPath*)indexPath{
     return nil;
 }
 
