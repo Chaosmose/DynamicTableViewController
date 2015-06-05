@@ -23,12 +23,12 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-#import "DynamicTableViewController.h"
+#import "PdSDynamicTableViewController.h"
 
 #define kDefaultCellHeight 50.f
 
 
-@interface DynamicTableViewController (){
+@interface PdSDynamicTableViewController (){
     BOOL _ios7;
     // Used for IOS 7 only
     NSMutableDictionary*_cellsForSizeComputation;
@@ -36,7 +36,7 @@
 
 @end
 
-@implementation DynamicTableViewController
+@implementation PdSDynamicTableViewController
 
 
 -(void)viewDidLoad{

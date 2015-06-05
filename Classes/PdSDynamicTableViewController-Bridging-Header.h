@@ -3,4 +3,4 @@
  *  @abstract  DynamicTableViewController  Swift Bridging Header
  */
 
-#import "DynamicTableViewController.h"
+#import "PdSDynamicTableViewController.h"

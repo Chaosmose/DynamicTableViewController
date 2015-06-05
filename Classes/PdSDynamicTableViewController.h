@@ -54,7 +54,7 @@
  *  Your dynamic table view controller should implement DynamicTable
  *  and inheritate from DynamicTableViewController
  */
-@interface DynamicTableViewController : UITableViewController<DynamicTable>
+@interface PdSDynamicTableViewController : UITableViewController<DynamicTable>
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
 - (id<DynamicCellDataSource>)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
 @end
