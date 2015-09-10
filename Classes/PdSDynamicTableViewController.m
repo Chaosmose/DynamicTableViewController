@@ -41,7 +41,7 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    _ios7=YES;//SYSTEM_VERSION_LESS_THAN(@"8.0");
+    _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
     if (_ios7) {
         _cellsForSizeComputation=[NSMutableDictionary dictionary];
     }else{
