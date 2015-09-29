@@ -41,10 +41,12 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    self.tableView.delegate=self;
     _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
     if (_ios7) {
         _cellsForSizeComputation=[NSMutableDictionary dictionary];
     }else{
+        
         self.tableView.estimatedRowHeight = 200.f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
     }
@@ -55,28 +57,6 @@
     [super didReceiveMemoryWarning];
     _cellsForSizeComputation=nil;
 }
-
-#pragma mark - UITableViewDataSource dynamic cell configuration
-
-
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
-    if(cellIdentifier){
-        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
-                                                                     forIndexPath:indexPath];
-        if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
-            id<DynamicCellDataSource>cellDataSource=[self cellDataSourceForIndexPath:indexPath];
-            if(cellDataSource){
-                [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
-            }
-            return cell;
-        }
-    }
-    [NSException raise:@"DynamicTableViewController"
-                format:@"This cell should not be nil cellIdentifier:\"%@\" section:%@ row:%@ if you mix dynamic & non dynamic cells please check the readme file instructions",cellIdentifier?cellIdentifier:@"",@(indexPath.section),@(indexPath.row)];
-    return nil;
-}
-
 
 
 #pragma mark - Autoresizing height computation
@@ -131,4 +111,31 @@
     return nil;
 }
 
+#pragma mark - UITableViewDataSource
+
+
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
+    if(cellIdentifier){
+        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier
+                                                                     forIndexPath:indexPath];
+        if([cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
+            id<DynamicCellDataSource>cellDataSource=[self cellDataSourceForIndexPath:indexPath];
+            if(cellDataSource){
+                [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
+            }
+            return cell;
+        }
+    }
+    [NSException raise:@"DynamicTableViewController"
+                format:@"This cell should not be nil cellIdentifier:\"%@\" section:%@ row:%@ if you mix dynamic & non dynamic cells please check the readme file instructions",cellIdentifier?cellIdentifier:@"",@(indexPath.section),@(indexPath.row)];
+    return nil;
+}
+
+
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 0;
+}
 @end

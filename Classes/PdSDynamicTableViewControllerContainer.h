@@ -29,8 +29,17 @@
  *  Your dynamic table view controller should implement DynamicTable
  *  and inheritate from PdSDynamicTableViewControllerContainer
  */
-@interface PdSDynamicTableViewControllerContainer : UIViewController<DynamicTable>
-@property (weak,nonatomic)IBOutlet UITableView* tableView
+@interface PdSDynamicTableViewControllerContainer : UIViewController<DynamicTable,UITableViewDelegate,UITableViewDataSource>
+@property (weak,nonatomic)IBOutlet UITableView* tableView;
+@property (nonatomic, strong, nullable) UIRefreshControl *refreshControl;
 - (NSString*)cellIdentifierForIndexPath:(NSIndexPath*)indexPath;
 - (id<DynamicCellDataSource>)cellDataSourceForIndexPath:(NSIndexPath*)indexPath;
+
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 @end

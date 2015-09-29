@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.summary     = 'Table View cell configuration + automatic cells heights computation based on autolayout'
   s.source      = { :git => 'https://github.com/benoit-pereira-da-silva/DynamicTableViewController.git'}
   s.license     = { :type => "MIT" }
-  s.ios.deployment_target = '7.1'
+  s.ios.deployment_target = '7.2'
   s.requires_arc = true
   s.frameworks   = 'UIKit'
   s.source_files =  'Classes/*.{h,m}'
