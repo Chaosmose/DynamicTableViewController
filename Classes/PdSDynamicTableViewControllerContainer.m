@@ -42,6 +42,7 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     self.tableView.delegate=self;
+    self.tableView.dataSource = self;
     _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
     if (_ios7) {
         _cellsForSizeComputation=[NSMutableDictionary dictionary];
