@@ -1,5 +1,5 @@
 # DynamicTableViewController
-Table View cell configuration + automatic cells heights computation based on autolayout
+Table View cell configuration 
 
 DynamicTableViewController configurates automatically TableView Cells that implements the DynamicConfigurableCell protocol.
 It means you donnot need to implement the UITableViewDataSource cellForRowAtIndexPath and cells heights are automatically computed. 
@@ -17,17 +17,7 @@ And your cell should implement the DynamicConfigurableCell protocol.
 -(void)configureWith:(NSObject<DynamicCellDataSource>*)dataSource;
 ```
 This approach allows to encapsulate the Cell logic.
-When using autolayout & size class, the cells height is computed automatically.
- 
-## IMPORTANT Note on IOS7 
 
-On ios7 to support Autoresizing height computation with full autolayout & classes sizes.
-*You must* pass the preferredMaxLayoutWidth to any Multiline Label.
-``` objective-c
-self.myLabel.preferredMaxLayoutWidth=configurator.maxTextWidth;
-```
-preferredMaxLayoutWidth is required to support constraint-based layout (auto layout)
-If nonzero, this is used when determining -intrinsicContentSize for multiline labels.
 
 ## How to mix Dynamic and non-dynamic cells?
  

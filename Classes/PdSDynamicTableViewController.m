@@ -21,17 +21,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#define SYSTEM_VERSION_LESS_THAN(v)([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
 #import "PdSDynamicTableViewController.h"
 
-#define kDefaultCellHeight 50.f
-
-
 @interface PdSDynamicTableViewController (){
-    BOOL _ios7;
-    // Used for IOS 7 only
-    NSMutableDictionary*_cellsForSizeComputation;
 }
 
 @end
@@ -41,9 +33,6 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    _ios7=SYSTEM_VERSION_LESS_THAN(@"8.0");
-    if (_ios7) {
-        _cellsForSizeComputation=[NSMutableDictionary dictionary];
     }else{
         self.tableView.estimatedRowHeight = 200.f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -84,36 +73,7 @@
 // Remember that you can disable this behaviour by implementing this method in your class.
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString*cellIdentifier=[self cellIdentifierForIndexPath:indexPath];
-    if (!_ios7 && cellIdentifier){
-        return UITableViewAutomaticDimension;
-    }else{
-        // In various situation caching the size is not possible.
-        // We do use one cell per cell identifier
-        // And recompute the height on each demand.
-        if(cellIdentifier){
-            UITableViewCell*cell=[_cellsForSizeComputation objectForKey:cellIdentifier];
-            if(!cell){
-                cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                // Make sure the constraints have been added to this cell
-                [cell setNeedsUpdateConstraints];
-                [cell updateConstraintsIfNeeded];
-                [_cellsForSizeComputation setObject:cell
-                                             forKey:cellIdentifier];
-            }
-            id<DynamicCellDataSource>cellDataSource=[self cellDataSourceForIndexPath:indexPath];
-            if( [cell conformsToProtocol:@protocol(DynamicConfigurableCell)]){
-                [(UITableViewCell<DynamicConfigurableCell>*)cell configureWith:cellDataSource];
-            }
-            cell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));
-            [cell setNeedsLayout];
-            [cell layoutIfNeeded];
-            CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-            height += 1.f;
-            return height;
-        }
-    }
-    return kDefaultCellHeight;
+    return UITableViewAutomaticDimension;
 }
 
 - (NSString*)_keyForRowAtIndexPath:(NSIndexPath *)indexPath{
