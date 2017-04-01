@@ -33,16 +33,13 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    }else{
-        self.tableView.estimatedRowHeight = 200.f;
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
-    }
+    self.tableView.estimatedRowHeight = 200.f;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 
 - (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
-    _cellsForSizeComputation=nil;
 }
 
 #pragma mark - UITableViewDataSource dynamic cell configuration
